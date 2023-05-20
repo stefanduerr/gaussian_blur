@@ -18,8 +18,8 @@ __kernel void gaussian_blur(__global const uchar4* input_image,
     const int x = get_global_id(0);
     const int y = get_global_id(1);
     const int index = y * width + x; \n"""
-    f"const int radius = {radius}; \n"
-    f"const float sigma = {sigma}; \n"
+    f"const int radius = {radius}; \n" # insert radius
+    f"const float sigma = {sigma}; \n" # insert sigma
     """float4 sum = 0.0f;
     float totalWeight = 0.0f;
 
@@ -40,9 +40,9 @@ __kernel void gaussian_blur(__global const uchar4* input_image,
 }
 """)
 
-# Load image and convert it to RGBA for the blur to function properly
+# Load test image and convert it to RGBA for the blur to function properly
 # Without converting it, the outcome is like in "no_RGBA_conversion.jpg"
-input_image = Image.open("Bild12.jpg").convert('RGBA')
+input_image = Image.open("test_image.jpg").convert('RGBA')
 width, height = input_image.size
 
 # Convert image to numpy array
