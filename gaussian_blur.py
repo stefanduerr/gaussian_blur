@@ -6,8 +6,8 @@ import pyopencl.clrandom as cl_random
 from PIL import Image
 
 # define radius and sigma
-radius = 20
-sigma = 3.5
+radius = 4
+sigma = 2
 
 # OpenCL kernel code
 kernel_code = ("""
@@ -54,6 +54,14 @@ device = platform.get_devices()[0]
 context = cl.Context([device])
 queue = cl.CommandQueue(context)
 
+# Query device max work group size and print it to the console
+max_work_group_size = device.get_info(cl.device_info.MAX_WORK_GROUP_SIZE)
+print(f'Maximum work group size of the device: {max_work_group_size}')
+
+# Query device max work item sizes and print it to the console
+max_work_item_sizes = device.get_info(cl.device_info.MAX_WORK_ITEM_SIZES)
+print(f'Maximum work item sizes of the device: {max_work_item_sizes}')
+
 # Create OpenCL buffers
 input_image_buffer = cl_array.to_device(queue, input_image_data)
 output_image_buffer = cl_array.empty_like(input_image_buffer)
@@ -74,8 +82,8 @@ output_image = Image.fromarray(output_image_data, 'RGBA')
 
 # generate filename, include radius and sigma in filename
 randnrs = [str(random.randint(0,9)) for x in range(4)]
-randstr = ''.join(randnrs)
-filename = f'GaussianBlur_Radius{radius}_Sigma{sigma}_{randstr}.png'
+randnrsstr = ''.join(randnrs)
+filename = f'GaussianBlur_Radius{radius}_Sigma{sigma}_{randnrsstr}.png'
 
 #print name of image to console
 print('Name of the generated image: ' + filename)
